@@ -52,10 +52,10 @@ export default function SecretUniverse() {
       return (
         localStorage.getItem('secret-universe:video') ||
         (import.meta.env.VITE_SECRET_VIDEO as string) ||
-  '/public/video.mp4'
+  '/video.mp4'
       );
     } catch {
-      return '/public/video.mp4';
+      return '/video.mp4';
     }
   });
   const [editingUrl, setEditingUrl] = useState(false);
@@ -215,7 +215,26 @@ export default function SecretUniverse() {
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black overflow-hidden">
       <div className="absolute inset-0 w-full h-screen">
-        <Canvas>
+        <Canvas
+          gl={{ 
+            powerPreference: "high-performance",
+            antialias: true,
+            stencil: false,
+            depth: true,
+            failIfMajorPerformanceCaveat: false,
+          }}
+          onCreated={({ gl }) => {
+            // Enable context loss handling
+            const canvas = gl.domElement;
+            canvas.addEventListener('webglcontextlost', (e) => {
+              e.preventDefault();
+              console.log('WebGL context lost. Attempting recovery...');
+            }, false);
+            canvas.addEventListener('webglcontextrestored', () => {
+              console.log('WebGL context restored.');
+            }, false);
+          }}
+        >
           <ambientLight intensity={0.35} />
           <pointLight intensity={0.6} position={[10, 10, 10]} />
           <Stars radius={160} depth={90} count={5200} factor={8} saturation={0} fade speed={0.6} />
