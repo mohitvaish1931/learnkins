@@ -52,10 +52,10 @@ export default function SecretUniverse() {
       return (
         localStorage.getItem('secret-universe:video') ||
         (import.meta.env.VITE_SECRET_VIDEO as string) ||
-  '/video.mp4'
+  '/public/video.mp4'
       );
     } catch {
-      return '/video.mp4';
+      return '/public/video.mp4';
     }
   });
   const [editingUrl, setEditingUrl] = useState(false);
